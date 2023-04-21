@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Release.Name }}-tcpdump
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chartname.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "chartname.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      name: {{ .Release.Name }}-debugger
+      labels:
+        {{- include "chartname.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: debugger
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            {{- toYaml .Values.command | nindent 12 }}
+          workingDir: /tmp
+          env:
+            {{- range $key, $value := .Values.envs }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          resources: {{ toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /host
+              name: host-root
+      hostIPC: true
+      hostNetwork: true
+      hostPID: true
+      tolerations:
+        - operator: Exists
+      volumes:
+        - hostPath:
+            path: /
+            type: ""
+          name: host-root
