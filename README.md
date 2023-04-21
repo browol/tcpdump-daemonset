@@ -87,3 +87,7 @@ To copy the TCPdump capture files from the `/tmp` directory of the TCPdump Pods 
 This script will copy all TCPdump capture files from the `/tmp` directory of the TCPdump Pods to a folder named after the Pod name on your local machine.
 
 Note that this script assumes that you have `kubectl` installed and configured to connect to your Kubernetes cluster. Also, be aware that copying large capture files can take some time, and may require additional storage space on your local machine.
+
+## License
+
+This project is licensed under the terms of the MIT License. See the [LICENSE](LICENSE) file for details.
