@@ -22,14 +22,15 @@ The following table lists the configurable parameters of the TCPDump DaemonSet H
 | `envs.HOST_PORT` | Port number to filter the captured traffic | `8080` |
 | `envs.ROTATE_EVERY_N_SECONDS` | Rotate the capture file every N seconds | `3600` |
 | `envs.ROTATE_EVERY_N_SIZE_MB` | Rotate the capture file every N MB | `10` |
+| `envs.COMMAND` | The command to execute inside container | `tcpdump -i any -w "%Y-%m-%d_%H-%M-%S_capture.pcap" -G $ROTATE_EVERY_N_SECONDS -C $ROTATE_EVERY_N_SIZE_MB "host $HOST_IP and port $HOST_PORT"` |
 
-By default, the `tcpdump` command used in the container is:
+By default, the command used in the container is:
 
 ```yaml
 command:
   - /bin/sh
   - -c
-  - tcpdump -i any -w "capture_%Y-%m-%d_%H-%M-%S.pcap" -G $ROTATE_EVERY_N_SECONDS -C $ROTATE_EVERY_N_SIZE_MB "host $HOST_IP and port $HOST_PORT"
+  - $(COMMAND)
 ```
 
 You can customize the command and environment variables in the `values.yaml` file.
@@ -71,8 +72,7 @@ To copy the TCPdump capture files from the `/tmp` directory of the TCPdump Pods 
 2. Edit the following parameters to match your environment:
 
    - `RELEASE_NAME`: The name of your TCPdump DaemonSet release.
-   - `CAPTURE_PREFIX`: The prefix used for your capture files, if different.
-   - `LOCAL_DIR`: The local directory where you want to save the capture files.
+   - `NAMESPACE`: The namespace where you want to deploy daemonset to execute tcpdump CLI.
 
 3. Save the script file and close the text editor.
 
