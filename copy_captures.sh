@@ -1,12 +1,15 @@
 #!/bin/bash
 
-# Define variables
-NAMESPACE=default
-RELEASE_NAME=my-release
-CAPTURE_PREFIX=capture_
-LOCAL_PATH=./captures
+# Prompt the user input, and set to default value if no input is provided
+read -p "Enter the namespace (default: default): " NAMESPACE
+NAMESPACE=${NAMESPACE:-"default"}
+
+# Prompt the user input, and set to default value if no input is provided
+read -p "Enter the release name (default: my-release): " RELEASE_NAME
+RELEASE_NAME=${RELEASE_NAME:-"my-release"}
 
 # Create local directory
+LOCAL_PATH=captures/
 mkdir -p $LOCAL_PATH
 
 # Get all Pods created by the DaemonSet
@@ -25,7 +28,7 @@ do
     for file in $files
     do
       echo "Copying $file from $pod..."
-      kubectl cp $NAMESPACE/$pod:$file $LOCAL_PATH/${pod}_${file##*/}
+      kubectl cp $NAMESPACE/$pod:$file $LOCAL_PATH/${file##*/}_${pod}
     done
   else
     echo "No capture files found in pod $pod."
