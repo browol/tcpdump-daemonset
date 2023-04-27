@@ -6,9 +6,10 @@ resources: {}
 command:
   - /bin/sh
   - -c
-  - tcpdump -i any -w "capture_%Y-%m-%d_%H-%M-%S.pcap" -G $ROTATE_EVERY_N_SECONDS -C $ROTATE_EVERY_N_SIZE_MB "host $HOST_IP and port $HOST_PORT"
+  - $(COMMAND)
 envs:
   HOST_IP: 10.0.0.123
   HOST_PORT: 8080
   ROTATE_EVERY_N_SECONDS: 3600
   ROTATE_EVERY_N_SIZE_MB: 10
+  COMMAND: 'tcpdump -i any -w "%Y-%m-%d_%H-%M-%S_capture.pcap" -G $ROTATE_EVERY_N_SECONDS -C $ROTATE_EVERY_N_SIZE_MB "host $HOST_IP and port $HOST_PORT"'
